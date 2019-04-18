@@ -652,22 +652,23 @@ void CL_AdjustAngles ( float frametime, float *viewangles )
 		viewangles[ROLL] = -50;
 }
 
-bool m_state;
+bool m_switch = true;
 Vector plr_angles;
+float current_y;
 
-void Autostrafe( usercmd_s* cmd ) {
-	    cmd->forwardmove = 17.75 * CVAR_GET_FLOAT("sv_maxspeed") * 6;
-		gEngfuncs.GetViewAngles(plr_angles);
-    	if(m_state){
+void PM_Autostrafe( usercmd_s* cmd ) {
+		current_y = cmd->viewangles.y;
+    	cmd->forwardmove = 17.75 * CVAR_GET_FLOAT("rez_pm_multiplier") * 4;
+    	if (m_switch) {
 			cmd->sidemove = -CVAR_GET_FLOAT("sv_maxspeed");
-			plr_angles.y -= 20;
+    		cmd->viewangles.y -= 20;
     	}
-    	else{
+    	else {
     		cmd->sidemove = +CVAR_GET_FLOAT("sv_maxspeed");
-    		plr_angles.y += 20;
+    		cmd->viewangles.y += 40;
     	}
-		gEngfuncs.SetViewAngles(plr_angles);
-		m_state = !m_state;
+    	cmd->viewangles.y = current_y;
+    	m_switch = !m_switch;
 }
 
 /*float time;
@@ -690,6 +691,11 @@ void DLLEXPORT CL_CreateMove ( float frametime, struct usercmd_s *cmd, int activ
 	float spd;
 	vec3_t viewangles;
 	static vec3_t oldangles;
+
+	if(CVAR_GET_FLOAT("rez_pm_autostrafe")){
+		PM_Autostrafe(cmd);
+	}
+
 	if ( active )
 	{
 		//memset( viewangles, 0, sizeof( vec3_t ) );

@@ -53,6 +53,8 @@ void InitCvars( void ) {
 	if(!initialized){
 		initialized = true;
 		CVAR_CREATE("rez_autostrafe", "0", NULL);
+		CVAR_CREATE("rez_pm_autostrafe", "0", NULL);
+		CVAR_CREATE("rez_pm_multiplier", "0", NULL);
 		CVAR_CREATE("rez_autostrafe_helper", "0", NULL);
 		CVAR_CREATE("rez_strafe_viewangle", "32", NULL);
 		CVAR_CREATE("rez_strafe_interval", "1", NULL);
